@@ -140,6 +140,14 @@ describe("sysClipTool", () => {
     delete process.env.DISPLAY;
     expect(sysClipTool()).toBeNull();
   });
+
+  test("Termux clipboard tool is used when enabled without GUI display", () => {
+    delete process.env.WAYLAND_DISPLAY;
+    delete process.env.DISPLAY;
+    const t = sysClipTool({ allowTermuxInTest: true });
+    expect(t?.put).toContain("termux-clipboard-set");
+    expect(t?.get).toContain("termux-clipboard-get");
+  });
 });
 
 describe("isCutKeyFor", () => {

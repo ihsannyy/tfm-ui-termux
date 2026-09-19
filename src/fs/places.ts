@@ -1,5 +1,5 @@
 import { execFile } from "node:child_process";
-import { statSync } from "node:fs";
+import { existsSync, statSync } from "node:fs";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
@@ -94,10 +94,28 @@ async function readUserDirs(): Promise<UserDir[]> {
       }
       out.push({ key: m[1], label, p });
     }
-    return out.sort((a, b) => (a.key < b.key ? -1 : 1));
-  } catch {
-    return [];
+    if (out.length > 0) return out.sort((a, b) => (a.key < b.key ? -1 : 1));
+  } catch {}
+
+  // Termux storage fallback
+  const termuxCandidates = [
+    { label: "Internal Storage", p: path.join(home, "storage", "shared") },
+    { label: "Downloads", p: path.join(home, "storage", "downloads") },
+    { label: "Documents", p: path.join(home, "storage", "documents") },
+    { label: "Pictures", p: path.join(home, "storage", "pictures") },
+    { label: "DCIM (Camera)", p: path.join(home, "storage", "dcim") },
+    { label: "Music", p: path.join(home, "storage", "music") },
+    { label: "Movies", p: path.join(home, "storage", "movies") },
+  ];
+  const termuxDirs: UserDir[] = [];
+  for (const item of termuxCandidates) {
+    try {
+      if (statSync(item.p).isDirectory()) {
+        termuxDirs.push({ key: item.label, label: item.label, p: item.p });
+      }
+    } catch {}
   }
+  return termuxDirs;
 }
 
 async function readBookmarks(): Promise<BookmarkEntry[]> {
@@ -244,6 +262,11 @@ export function buildSections(): Place[][] {
 
   const devices: Place[] = [
     { icon: "harddisk", label: "This Device", path: "/", ejectable: false },
+  ];
+  if (process.env.PREFIX && existsSync(process.env.PREFIX)) {
+    devices.push({ icon: "harddisk", label: "Termux Root", path: process.env.PREFIX, ejectable: false });
+  }
+  devices.push(
     ...sysMounts.map(
       (m): Place => ({
         icon: m.removable ? "usb" : "harddisk",
@@ -254,7 +277,7 @@ export function buildSections(): Place[][] {
         mountDevice: m.target ? undefined : m.device,
       }),
     ),
-  ];
+  );
 
   // Network: an always-present "Connect to Server…" row, active gvfs mounts,
   // and saved remote bookmarks that aren't mounted yet (click connects). A

@@ -1,5 +1,5 @@
 {
-  "name": "tfm-tui",
+  "name": "tfm-ui-termux",
   "version": "0.1.0-beta.0",
   "type": "module",
   "private": true,
@@ -20,6 +20,8 @@
   },
   "dependencies": {
     "@opentui/core": "0.5.11",
+    "@opentui/core-linux-arm64": "^0.5.11",
+    "@opentui/core-linux-arm64-musl": "^0.5.11",
     "smol-toml": "^1.8.0"
   }
 }

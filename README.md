@@ -1,8 +1,15 @@
-# tfm (terminal file manager)
+# tfm-ui-termux (terminal file manager)
 
-A modern, mouse-first file manager with places sidebar, grid view, drag & drop, image thumbnails and more, right inside your terminal.
+A modern, mouse-first file manager with places sidebar, grid view, drag & drop, image thumbnails and more, right inside your terminal — **adapted for Android Termux & Linux**.
 
-![beta](https://img.shields.io/badge/status-beta-yellow) [![website](https://img.shields.io/badge/website-tfm--tui-blue?logo=githubpages&logoColor=white)](https://clarkarch.github.io/tfm-tui/)
+> [!NOTE]
+> This fork (`tfm-ui-termux`) includes specific adaptations for **Android Termux**:
+> - **glibc / ld-linux linker bridge**: Runs seamlessly under Termux via `glibc-runner` / `grun` or native Bun compile.
+> - **Termux Places & Storage Integration**: Automatic detection and shortcut places for Android shared storage (`/sdcard`, Downloads, Documents, DCIM, Pictures, Music) and `$PREFIX`.
+> - **Termux Clipboard Support**: Integrated fallback using `termux-clipboard-get` and `termux-clipboard-set`.
+> - **Termux Shell & Path Resilience**: Smart detection of Termux `/data/data/com.termux/files/usr/bin/bash` or `$SHELL` for the embedded terminal.
+
+![beta](https://img.shields.io/badge/status-beta-yellow) [![fork](https://img.shields.io/badge/termux-ready-green)](https://github.com/ihsannyy/tfm-ui-termux)
 
 > [!WARNING]
 > Beta software, usable daily, but still back up anything irreplaceable first before performing a files op. 
@@ -49,15 +56,15 @@ A modern, mouse-first file manager with places sidebar, grid view, drag & drop, 
 ## Install
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/clarkarch/tfm-tui/main/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/ihsannyy/tfm-ui-termux/main/install.sh | bash
 ```
 
-Or build from source:
+Or build from source on Termux:
 
 ```bash
-bun install --frozen-lockfile
-bun run check && bun test
-bun run compile && cp dist/tfm ~/.local/bin/
+npm install
+bun run compile
+cp dist/tfm ~/.local/bin/
 ```
 
 ## Keys

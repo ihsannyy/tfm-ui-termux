@@ -27,7 +27,7 @@ type ClipTool = {
   getTextArgs: string[];
 };
 
-export const sysClipTool = (): ClipTool | null => {
+export const sysClipTool = (opts?: { allowTermuxInTest?: boolean }): ClipTool | null => {
   if (process.env.WAYLAND_DISPLAY) {
     return {
       get: "wl-paste",
@@ -46,6 +46,25 @@ export const sysClipTool = (): ClipTool | null => {
       putBase: ["-selection", "clipboard", "-l", "10"],
       getArgs: ["-selection", "clipboard", "-o", "-t", CLIP_TYPE],
       getTextArgs: ["-selection", "clipboard", "-o"],
+    };
+  }
+  if (
+    (process.env.NODE_ENV !== "test" || opts?.allowTermuxInTest) &&
+    (process.env.TERMUX_VERSION ||
+      existsSync("/data/data/com.termux/files/usr/bin/termux-clipboard-get"))
+  ) {
+    const getBin = existsSync("/data/data/com.termux/files/usr/bin/termux-clipboard-get")
+      ? "/data/data/com.termux/files/usr/bin/termux-clipboard-get"
+      : "termux-clipboard-get";
+    const putBin = existsSync("/data/data/com.termux/files/usr/bin/termux-clipboard-set")
+      ? "/data/data/com.termux/files/usr/bin/termux-clipboard-set"
+      : "termux-clipboard-set";
+    return {
+      get: getBin,
+      put: putBin,
+      putBase: [],
+      getArgs: [],
+      getTextArgs: [],
     };
   }
   return null;

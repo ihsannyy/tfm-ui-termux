@@ -1,13 +1,18 @@
 #!/usr/bin/env bash
-# tfm installer: downloads a prebuilt binary for your arch.
-# usage: curl -fsSL https://raw.githubusercontent.com/clarkarch/tfm-tui/main/install.sh | bash
+# tfm installer: downloads a prebuilt binary for your arch (with Termux glibc support).
+# usage: curl -fsSL https://raw.githubusercontent.com/ihsannyy/tfm-ui-termux/main/install.sh | bash
 # env: TFM_INSTALL_DIR (default ~/.local/bin), TFM_VERSION (default latest),
 #      TFM_NO_VERIFY=1 to skip checksum verification (not recommended).
 set -euo pipefail
 
-REPO="clarkarch/tfm-tui"
+REPO="ihsannyy/tfm-ui-termux"
 DEST="${TFM_INSTALL_DIR:-$HOME/.local/bin}"
 VERSION="${TFM_VERSION:-latest}"
+
+IS_TERMUX=false
+if [ -d "/data/data/com.termux" ] || [ -n "${TERMUX_VERSION:-}" ]; then
+  IS_TERMUX=true
+fi
 
 case "$(uname -m)" in
   x86_64) ARCH="x86_64-linux" ;;
@@ -53,7 +58,30 @@ if [ -e "$DEST/tfm" ]; then
   mv -f "$DEST/tfm" "$DEST/tfm.bak"
   echo "tfm: previous binary backed up to $DEST/tfm.bak"
 fi
-mv "$TMP/tfm" "$DEST/tfm"
+
+if [ "$IS_TERMUX" = "true" ]; then
+  mv "$TMP/tfm" "$DEST/tfm.elf"
+  cat << 'WRAPPERSCRIPT' > "$DEST/tfm"
+#!/data/data/com.termux/files/usr/bin/bash
+TARGET="$(dirname "$(realpath "$0")")/tfm.elf"
+if command -v grun >/dev/null 2>&1; then
+  exec grun "$TARGET" "$@"
+elif command -v glibc-runner >/dev/null 2>&1; then
+  exec glibc-runner "$TARGET" "$@"
+elif [ -x "$HOME/.bun/bin/bun-termux" ]; then
+  BUN_BINARY_PATH="$TARGET" exec "$HOME/.bun/bin/bun-termux" "$@"
+else
+  echo "tfm: prebuilt Linux binary requires glibc runner on Termux." >&2
+  echo "Please install glibc-runner: pkg install glibc-runner" >&2
+  echo "Or compile natively using Bun: bun run compile" >&2
+  exit 1
+fi
+WRAPPERSCRIPT
+  chmod +x "$DEST/tfm"
+  echo "tfm: installed with Termux glibc-runner wrapper"
+else
+  mv "$TMP/tfm" "$DEST/tfm"
+fi
 ln -sf "$DEST/tfm" "$DEST/terminal-file-manager"
 
 echo "tfm: installed -> $DEST/tfm (run it via \"tfm\" or \"terminal-file-manager\")"
@@ -93,10 +121,12 @@ have rsvg-convert || add_missing "rsvg-convert — theme-tinted icons and SVG th
 have magick       || add_missing "magick — raster image thumbnails (fallback)"
 have ffmpeg       || add_missing "ffmpeg — video thumbnails & previews"
 have gio          || add_missing "gio — starred-file metadata (trash itself needs no gio)"
-have xdg-open     || add_missing "xdg-open — opens files in their default app (required)"
-have udisksctl    || add_missing "udisksctl — mount/eject removable drives"
-if ! have wl-paste && ! have wl-copy && ! have xclip; then
-  add_missing "wl-paste/wl-copy or xclip — copy/paste between tfm and GUI apps"
+have xdg-open || have termux-open || add_missing "xdg-open / termux-open — opens files in their default app (required)"
+if [ "$IS_TERMUX" = "false" ]; then
+  have udisksctl    || add_missing "udisksctl — mount/eject removable drives"
+fi
+if ! have wl-paste && ! have wl-copy && ! have xclip && ! have termux-clipboard-get; then
+  add_missing "wl-paste/wl-copy, xclip, or termux-clipboard — copy/paste between tfm and apps"
 fi
 
 if [ -n "$MISSING" ]; then

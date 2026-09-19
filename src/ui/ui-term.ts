@@ -1,3 +1,4 @@
+import { existsSync } from "node:fs";
 import { Box, EmbeddedTerminalRenderable, Text } from "@opentui/core";
 import { clearChildren } from "../lib/uiutil";
 import { fsErrText } from "../fs/fsutil";
@@ -423,7 +424,12 @@ export const makeTerminal = (ctx: TermCtx) => {
     host.add(header);
     host.add(term);
     ctx.stripSelectable();
-    const shell = process.env.SHELL || "/bin/bash";
+    const defaultShell = existsSync("/data/data/com.termux/files/usr/bin/bash")
+      ? "/data/data/com.termux/files/usr/bin/bash"
+      : existsSync("/bin/bash")
+        ? "/bin/bash"
+        : "/bin/sh";
+    const shell = process.env.SHELL || defaultShell;
     try {
       termChild = Bun.spawn([shell], {
         cwd,
