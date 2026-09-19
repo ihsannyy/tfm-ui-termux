@@ -9,8 +9,8 @@ export const glyph: Record<string, string> = {
   clock: "\u{F017}",           // 
   bookmark: "\u{F02E}",        // 
   "trash-can": "\u{F1F8}",     // 
-  folder: "\u{F07B}",          // 
-  "folder-plus": "\u{F07B}",   // 
+  folder: "\u{E5FF}",          // 
+  "folder-plus": "\u{E5FE}",   // 
   harddisk: "\u{F0A0}",        // 
   usb: "\u{F287}",             // 
   network: "\u{F0EC}",         // 

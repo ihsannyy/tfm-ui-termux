@@ -478,6 +478,7 @@ export const makeGridRenderer = (ctx: GridRendererCtx) => {
         height: ICON_CELLS_H,
         flexDirection: "row",
         justifyContent: "center",
+        alignItems: "center",
         marginTop: hoverLift && liftDir === "up" ? 1 : 0,
       },
       iconSlotEl,

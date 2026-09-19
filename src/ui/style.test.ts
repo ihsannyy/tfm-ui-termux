@@ -137,7 +137,7 @@ describe("applySurface", () => {
 
 describe("glyph fallbacks", () => {
   test("glyphFor returns the mapped glyph or the replacement char", () => {
-    expect(glyphFor("folder")).toBe("\u{F07B}");
+    expect(glyphFor("folder")).toBe("\u{E5FF}");
     expect(glyphFor("definitely-not-a-glyph")).toBe(glyph.file);
   });
 
