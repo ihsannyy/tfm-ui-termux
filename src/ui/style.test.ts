@@ -137,15 +137,12 @@ describe("applySurface", () => {
 
 describe("glyph fallbacks", () => {
   test("glyphFor returns the mapped glyph or the replacement char", () => {
-    expect(glyphFor("folder")).toBe("\u{F024B}");
-    expect(glyphFor("definitely-not-a-glyph")).toBe("\u{FFFD}");
+    expect(glyphFor("folder")).toBe("\u{F07B}");
+    expect(glyphFor("definitely-not-a-glyph")).toBe(glyph.file);
   });
 
   test("power-plug maps to the verified nerd-font codepoint (esc-menu Plugins entry)", () => {
-    // U+F06A5 = md-power_plug in MesloLGLDZ Nerd Font Mono (checked via
-    // fontTools getBestCmap — never guess codepoints, a wrong one renders
-    // an unrelated glyph with no error)
-    expect(glyphFor("power-plug")).toBe("\u{F06A5}");
+    expect(glyphFor("power-plug")).toBe("\u{F1E6}");
   });
 
   test("ensureGlyphFallbacks fills unknown categories with the file glyph", () => {

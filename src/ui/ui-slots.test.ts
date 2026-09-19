@@ -18,7 +18,12 @@ const makeHarness = () => {
   const nodes = new Map<string, any>();
   let modalUp = false;
   const ctx: SlotsCtx = {
-    renderer: () => ({ resolution: { width: 800, height: 400 }, terminalWidth: 80, terminalHeight: 20 }),
+    renderer: () => ({
+      resolution: { width: 800, height: 400 },
+      terminalWidth: 80,
+      terminalHeight: 20,
+      capabilities: { kitty_graphics: true },
+    }),
     byId: (id) => nodes.get(id),
     clearChildren: () => {},
     colors: () => ({ bg: BG, sidebarFgMuted: FG, sidebarBg: BG, hoverBg: BG, white: "#fff" }) as unknown as Theme,

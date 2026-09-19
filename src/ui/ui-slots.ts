@@ -186,7 +186,7 @@ export const makeSlots = (ctx: SlotsCtx) => {
   const drainThumbs = async () => {
     const jobs = thumbJobs;
     thumbJobs = [];
-    if (!ctx.renderer().resolution || jobs.length === 0) return;
+    if (!ctx.renderer().capabilities?.kitty_graphics || !ctx.renderer().resolution || jobs.length === 0) return;
     // priority first, then visible tiles, then the off-screen backlog —
     // Array#sort is stable, so each class keeps its push order
     jobs.sort((a, b) => thumbJobRank(a) - thumbJobRank(b));
@@ -273,7 +273,7 @@ export const makeSlots = (ctx: SlotsCtx) => {
   };
 
   const drainIconQueue = async () => {
-    if (!ctx.renderer().resolution) return;
+    if (!ctx.renderer().capabilities?.kitty_graphics || !ctx.renderer().resolution) return;
     const aspect = cellMetrics().aspect;
     const pending = [...allSpecs.values()].filter((s) => !s.done);
     await Promise.all(

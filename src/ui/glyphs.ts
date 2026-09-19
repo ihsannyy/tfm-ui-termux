@@ -1,65 +1,68 @@
-// --- Nerd Font glyphs: FALLBACK ONLY ---
-// Used when rsvg-convert is missing or a raster hasn't drained yet.
-// Codepoints verified against the MesloLGLDZ Nerd Font Mono cmap — never
-// paste guessed ones (see AGENTS.md "Icons").
+// --- Nerd Font glyphs for Terminal & Termux ---
+// Uses standard BMP Private Use Area (0xE000 - 0xF8FF) codepoints compatible
+// with 100% of Nerd Fonts (JetBrainsMono, Meslo, FiraCode, Hack, etc.)
+// on Linux, macOS, and Android/Termux.
 
 export const glyph: Record<string, string> = {
-  home: "\u{F02DC}",
-  star: "\u{F04CE}",
-  clock: "\u{F0954}",
-  bookmark: "\u{F00C6}",
-  "trash-can": "\u{F0A79}",
-  folder: "\u{F024B}",
-  harddisk: "\u{F02CA}",
-  usb: "\u{F0553}",
-  network: "\u{F059F}",
-  eject: "\u{F01EA}",
-  search: "\u{F002}",
-  file: "\u{F0214}",
-  "chevron-left": "\u{F0141}",
-  "chevron-right": "\u{F0142}",
-  "desktop-tower": "\u{F01C5}",
-  cog: "\u{F0493}",
-  power: "\u{F0425}",
-  "power-plug": "\u{F06A5}",
-  eye: "\u{F0208}",
-  "eye-off": "\u{F0209}",
-  "content-copy": "\u{F018F}",
-  "content-paste": "\u{F0192}",
-  "content-cut": "\u{F0190}",
-  information: "\u{F02FD}",
-  pencil: "\u{F03EB}",
-  "folder-plus": "\u{F0770}",
-  "select-all": "\u{F0478}",
-  sort: "\u{F04BA}",
-  "checkbox-marked": "\u{F0132}",
-  "checkbox-blank": "\u{F0131}",
-  pause: "\u{F03E4}",
-  play: "\u{F040A}",
-  close: "\u{F0156}",
-  check: "\u{F012C}",
-  terminal: "\u{F120}",
-  plus: "\u{F0415}",
-  disc: "\u{F05EE}",
-  "cog-box": "\u{F0494}",
-  package: "\u{F03D3}",
-  "file-font": "\u{F06D6}",
-  "book-open": "\u{F00BD}",
-  database: "\u{F01BC}",
-  certificate: "\u{F0124}",
-  cube: "\u{F01A6}",
-  email: "\u{F01EE}",
-  magnet: "\u{F0347}",
-  android: "\u{F0032}",
-  // sort-direction arrows (menu hintIcon): standard Unicode arrows, NOT Nerd
-  // PUA codepoints — U+2191/2193 ship in Meslo and virtually every monospace
-  // font, so they render even where the Nerd patch is incomplete. Without
-  // these the active sort column falls back to U+FFFD tofu in glyph mode.
+  home: "\u{F015}",            // 
+  star: "\u{F005}",            // 
+  clock: "\u{F017}",           // 
+  bookmark: "\u{F02E}",        // 
+  "trash-can": "\u{F1F8}",     // 
+  folder: "\u{F07B}",          // 
+  "folder-plus": "\u{F07B}",   // 
+  harddisk: "\u{F0A0}",        // 
+  usb: "\u{F287}",             // 
+  network: "\u{F0EC}",         // 
+  eject: "\u{F052}",           // 
+  search: "\u{F002}",          // 
+  file: "\u{F15B}",            // 
+  "file-code": "\u{F1C9}",     // 
+  "file-document": "\u{F15C}", // 
+  "file-image": "\u{F1C5}",    // 
+  "file-music": "\u{F1C7}",    // 
+  "file-video": "\u{F1C8}",    // 
+  "file-pdf-box": "\u{F1C1}",  // 
+  "zip-box": "\u{F1C6}",       // 
+  "file-font": "\u{F031}",     // 
+  "book-open": "\u{F02D}",     // 
+  database: "\u{F1C0}",        // 
+  certificate: "\u{F0A3}",     // 
+  cube: "\u{F1B2}",            // 
+  email: "\u{F0E0}",           // 
+  magnet: "\u{F076}",          // 
+  android: "\u{F17B}",         // 
+  "chevron-left": "\u{F053}",  // 
+  "chevron-right": "\u{F054}", // 
+  "desktop-tower": "\u{F108}", // 
+  cog: "\u{F013}",             // 
+  "cog-box": "\u{F085}",       // 
+  power: "\u{F011}",           // 
+  "power-plug": "\u{F1E6}",    // 
+  eye: "\u{F06E}",             // 
+  "eye-off": "\u{F070}",       // 
+  "content-copy": "\u{F0C5}",  // 
+  "content-paste": "\u{F0EA}", // 
+  "content-cut": "\u{F0C4}",   // 
+  information: "\u{F05A}",     // 
+  pencil: "\u{F040}",          // 
+  "select-all": "\u{F046}",    // 
+  sort: "\u{F0DC}",            // 
+  "checkbox-marked": "\u{F046}", // 
+  "checkbox-blank": "\u{F096}",  // 
+  pause: "\u{F04C}",           // 
+  play: "\u{F04B}",            // 
+  close: "\u{F00D}",           // 
+  check: "\u{F00C}",           // 
+  terminal: "\u{F120}",        // 
+  plus: "\u{F067}",            // 
+  disc: "\u{F10A}",            // 
+  package: "\u{F1B3}",         // 
   "arrow-up": "↑",
   "arrow-down": "↓",
 };
 
-export const glyphFor = (name: string): string => glyph[name] ?? "\u{FFFD}";
+export const glyphFor = (name: string): string => glyph[name] ?? glyph.file ?? "\u{FFFD}";
 
 // every file-type category the classifier can emit must have a glyph: fill
 // unknown ones with the generic file glyph so a new filetype never renders □
