@@ -62,7 +62,23 @@ export const glyph: Record<string, string> = {
   "arrow-down": "↓",
 };
 
-export const glyphFor = (name: string): string => glyph[name] ?? glyph.file ?? "\u{FFFD}";
+export const glyphFor = (name: string, heightCells = 1): string => {
+  const icon = glyph[name] ?? glyph.file ?? "\u{FFFD}";
+  if (heightCells <= 1) return icon;
+
+  if (name === "folder" || name === "folder-plus") {
+    if (heightCells === 2) {
+      return "╭───╮ \n╰  ╯ ";
+    }
+    return " ╭───╮  \n╭╯  ╰─╮\n╰──────╯";
+  }
+
+  // Multi-row badge for files in Grid view
+  if (heightCells === 2) {
+    return `╭───╮\n╰ ${icon} ╯`;
+  }
+  return `╭────╮\n│ ${icon}  │\n╰────╯`;
+};
 
 // every file-type category the classifier can emit must have a glyph: fill
 // unknown ones with the generic file glyph so a new filetype never renders □

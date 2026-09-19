@@ -83,7 +83,7 @@ export type SlotsCtx = {
   iconCells(): number;
   // true while a modal menu/scrim owns the screen (drain re-applies scrim)
   modalOpen(): boolean;
-  glyphFor(name: string): string;
+  glyphFor(name: string, heightCells?: number): string;
 };
 
 export const dimHex = (hex: string, f: number): string => {
@@ -127,7 +127,10 @@ export const makeSlots = (ctx: SlotsCtx) => {
     statesFactory?: () => IconState[],
   ): { el: ReturnType<typeof Box>; slotId: string; spec: IconSpec } => {
     const slotId = `tfm-icon-${iconSeq++}`;
-    const g = ctx.glyphFor(name);
+    const g = ctx.glyphFor(name, heightCells);
+    const gLines = g.split("\n");
+    const maxLineW = Math.max(...gLines.map((l) => l.length));
+    const slotW = Math.max(Math.round(heightCells * 2), maxLineW);
     const spec: IconSpec = {
       slotId,
       name,
@@ -141,7 +144,7 @@ export const makeSlots = (ctx: SlotsCtx) => {
       el: Box(
         {
           id: slotId,
-          width: Math.round(heightCells * 2),
+          width: slotW,
           height: heightCells,
           flexDirection: "column",
           justifyContent: "center",

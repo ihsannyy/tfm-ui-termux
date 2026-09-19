@@ -428,7 +428,7 @@ export const makeGridRenderer = (ctx: GridRendererCtx) => {
 
     const dim = entry.name.startsWith(".");
     const baseFg = dim ? colors.sidebarFgMuted : colors.sidebarFg;
-    const slotW = Math.max(1, Math.round(aspect * ICON_CELLS_H));
+    const slotW = Math.max(8, Math.round(aspect * ICON_CELLS_H));
 
     const { isVideo, stat, useThumb } = thumbPlanFor(entry, key);
 
@@ -474,7 +474,7 @@ export const makeGridRenderer = (ctx: GridRendererCtx) => {
       (liftDir === "up" || liftDir === "down" ? !wrapOn && liftSpareV >= 1 : liftSpareH >= 1);
     const tileBox = Box(
       {
-        width: slotW,
+        width: Math.max(slotW, (iconSlotEl as any)?.width ?? 8),
         height: ICON_CELLS_H,
         flexDirection: "row",
         justifyContent: "center",
